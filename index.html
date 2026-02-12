@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panfex - Profesionální pánve</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1>PANFEX</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="#produkty" class="nav-link">Produkty</a>
+                    <a href="#o-znacce" class="nav-link">O značce</a>
+                    <a href="#zakaznici" class="nav-link">Pro zákazníky</a>
+                    <a href="#o-spolecnosti" class="nav-link">O společnosti</a>
+                    <a href="#kontakt" class="btn btn-outline">Kontakt</a>
+
+                    <div class="cart" id="cart">
+                        <a href="cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </a>
+                        <div class="cart-dropdown" id="cart-dropdown">
+                            <div class="cart-items" id="cart-items">
+                                <!-- Položky košíku budou vloženy sem -->
+                            </div>
+                            <div class="cart-footer">
+                                <div class="cart-total">Celkem: <span id="cart-total">0 Kč</span></div>
+                                <a href="cart.html" class="btn btn-primary btn-small" id="checkout-btn">Přejít do košíku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Vař jako profík</h1>
+                <p>Prémiové pánve pro náročné kuchaře</p>
+                <a href="#tipy" class="btn btn-primary">Zjistit tipy a triky</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kategorie produktů -->
+    <section id="produkty" class="categories">
+        <div class="container">
+            <h2 class="section-title">Naše produkty</h2>
+            
+            <div class="category-grid">
+                <!-- Kategorie 1 -->
+                <a href="kategorie/univerzalni-panve.html" class="category-card">
+                    <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1592078615290-033ee584e267?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80');">
+                        <span class="product-count">3 produkty</span>
+                    </div>
+                    <h3>Univerzální pánve</h3>
+                    <p>Pro každodenní vaření</p>
+                </a>
+
+                <!-- Kategorie 2 -->
+                <a href="kategorie/dvojite-panve.html" class="category-card">
+                    <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80');">
+                        <span class="product-count">1 produkt</span>
+                    </div>
+                    <h3>Doublety</h3>
+                    <p>Dvojité pánve pro dokonalé pečení</p>
+                </a>
+
+                <!-- Kategorie 3 -->
+                <a href="kategorie/panve-s-displejem.html" class="category-card">
+                    <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1601050691197-9c424a60acae?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80');">
+                        <span class="product-count">1 produkt</span>
+                    </div>
+                    <h3>Pánve s displejem</h3>
+                    <p>Přesné měření teploty</p>
+                </a>
+
+                <!-- Kategorie 4 -->
+                <a href="kategorie/camping-sady.html" class="category-card">
+                    <div class="category-image" style="background-image: url('https://images.unsplash.com/photo-1504280396769-1a2d9f1bca05?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80');">
+                        <span class="product-count">2 produkty</span>
+                    </div>
+                    <h3>Camping sady</h3>
+                    <p>Kompletní vybavení na cesty</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- O značce -->
+    <section id="o-znacce" class="about-brand">
+        <div class="container">
+            <h2 class="section-title">Proč Panfex?</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Každá pánev Panfex vzniká kombinací chytrého designu a robustního materiálu. Cíl je jednoduchý — přenést zážitek z profesionální kuchyně do každé domácnosti. Ať vaříš na indukci, ohni nebo cestovním vařiči, naše pánve drží teplotu, nedeformují se a dávají tvým jídlům dokonalou texturu.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>Prémiový, odolný materiál (doživotní výdrž)</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-hammer"></i>
+                            <p>Precizní řemeslné zpracování</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <p>Ergonomický design navržený pro profesionály</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-broom"></i>
+                            <p>Snadná údržba, odolnost proti poškrábání</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <!-- Místo pro obrázek pánve -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sekce pro zákazníky -->
+    <section id="zakaznici" class="customer-section">
+        <div class="container">
+            <h2 class="section-title">Pro zákazníky</h2>
+            <div class="customer-links">
+                <a href="zakaznici/vse-o-nakupu.html" class="customer-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Vše o nákupu</span>
+                </a>
+                <a href="zakaznici/doprava-a-platba.html" class="customer-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Doprava a platba</span>
+                </a>
+                <a href="zakaznici/obchodni-podminky.html" class="customer-link">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Obchodní podmínky</span>
+                </a>
+                <a href="zakaznici/ochrana-osobnich-udaju.html" class="customer-link">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Ochrana osobních údajů</span>
+                </a>
+                <a href="zakaznici/souhlas-osobni-udaje.html" class="customer-link">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Souhlas se zpracováním osobních údajů</span>
+                </a>
+                <a href="zakaznici/reklamace.html" class="customer-link">
+                    <i class="fas fa-undo-alt"></i>
+                    <span>Reklamace</span>
+                </a>
+                <a href="zakaznici/recenze.html" class="customer-link">
+                    <i class="fas fa-star"></i>
+                    <span>Recenze</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- O společnosti -->
+    <section id="o-spolecnosti" class="about-company">
+        <div class="container">
+            <h2 class="section-title">O společnosti</h2>
+            <div class="about-company-content">
+                <div class="about-company-text">
+                    <p>Jsme česká společnost s dlouholetou tradicí ve výrobě kvalitního kuchyňského nádobí. Naše pánve Panfex jsou vyráběny s důrazem na kvalitu, funkčnost a moderní design. Spolupracujeme s předními šéfkuchaři, abychom zajistili, že naše produkty splňují i ty nejnáročnější požadavky profesionálů.</p>
+                    <p>Naší vizí je přinášet do českých domácností kvalitní nádobí, které vydrží generace. Věříme, že kvalitní nádobí je základem pro skvělé kulinářské zážitky.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontakt a patička -->
+    <footer id="kontakt" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <p>pans s.r.o.<br>
+                    Opavská 8b<br>
+                    639 00 Brno</p>
+                    <p>IČ: 12345678<br>
+                    DIČ: CZ12345678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Otevírací doba</h3>
+                    <p>Po – Čt 8.00–15.00<br>
+                    Pá 8.00–14.00</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Rychlý kontakt</h3>
+                    <p><a href="tel:+420123456789">+420 123 456 789</a></p>
+                    <p><a href="mailto:info@panfex.cz">info@panfex.cz</a></p>
+                    <a href="#" class="btn btn-outline">Napište nám</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Panfex. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

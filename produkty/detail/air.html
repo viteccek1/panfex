@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pánev Air | Panfex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Additional styles for product detail page */
+        .product-detail {
+            padding: 2rem 0;
+            background-color: #fff;
+        }
+        
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .product-gallery {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .main-image {
+            width: 100%;
+            background-color: var(--gray-light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--gray-medium);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--secondary-color);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-subtitle {
+            color: var(--gray-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+        
+        .product-badge {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .price-container {
+            background-color: var(--gray-light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+        
+        .price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .price-vat {
+            color: var(--gray-dark);
+            font-size: 0.9rem;
+        }
+        
+        .availability {
+            color: #2e7d32;
+            font-weight: 500;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .availability i {
+            font-size: 1.2rem;
+        }
+        
+        .btn-add-to-cart {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        .btn-add-to-cart:hover {
+            background-color: #7a6349;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2);
+        }
+        
+        .delivery-info {
+            font-size: 0.9rem;
+            color: var(--gray-dark);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-medium);
+        }
+        
+        .product-tabs {
+            margin-top: 3rem;
+        }
+        
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--gray-medium);
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .tab-btn.active {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1.5rem 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1rem;
+        }
+        
+        .spec-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .spec-name {
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+        
+        .spec-value {
+            color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column;
+            }
+            
+            .product-title {
+                font-size: 1.8rem;
+            }
+            
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation (same as index.html) -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="../../index.html">
+                        <h1>PANFEX</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="../../index.html#produkty" class="nav-link">Produkty</a>
+                    <a href="../../index.html#o-znacce" class="nav-link">O značce</a>
+                    <a href="../../index.html#zakaznici" class="nav-link">Pro zákazníky</a>
+                    <a href="../../index.html#o-spolecnosti" class="nav-link">O společnosti</a>
+                    <a href="../../index.html#kontakt" class="btn btn-outline">Kontakt</a>
+
+                    <div class="cart" id="cart">
+                        <a href="../../cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </a>
+                        <div class="cart-dropdown" id="cart-dropdown">
+                            <div class="cart-items" id="cart-items">
+                                <!-- Položky košíku budou vloženy sem -->
+                            </div>
+                            <div class="cart-footer">
+                                <div class="cart-total">Celkem: <span id="cart-total">0 Kč</span></div>
+                                <a href="../../cart.html" class="btn btn-primary btn-small" id="checkout-btn">Přejít do košíku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Product Detail Section -->
+    <section class="product-detail">
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="../../index.html">Úvod</a> &gt; 
+                <a href="../../index.html#produkty">Produkty</a> &gt; 
+                <a href="#">Pánev Air</a>
+            </div>
+            
+            <div class="product-container">
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="https://images.unsplash.com/photo-1581494429364-0b8a5f5b5f5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pánev Air">
+                    </div>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail active">
+                            <img src="https://images.unsplash.com/photo-1581494429364-0b8a5f5b5f5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Pánev Air - pohled shora">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="https://images.unsplash.com/photo-1601050691197-9c424a60acae?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Pánev Air - detail povrchu">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="https://images.unsplash.com/photo-1515543904372-1ccc5677d9ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Pánev Air - boční pohled">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <span class="product-badge">Akce</span>
+                    <h1 class="product-title">Pánev Air</h1>
+                    <p class="product-subtitle">Ultraľahká pánev ideální na cesty a kempování</p>
+                    
+                    <div class="price-container">
+                        <div class="price">1 990 Kč</div>
+                        <div class="price-vat">včetně DPH</div>
+                        <div class="availability">
+                            <i class="fas fa-check-circle"></i>
+                            Skladem > 8 ks - expedice do 24 hodin
+                        </div>
+                    </div>
+                    
+                    <button class="btn-add-to-cart" data-product-id="air" data-product-name="Pánev Air" data-price="1990" data-image="https://images.unsplash.com/photo-1581494429364-0b8a5f5b5f5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80">
+                        <i class="fas fa-shopping-cart"></i>
+                        Přidat do košíku
+                    </button>
+                    
+                    <div class="delivery-info">
+                        <p><i class="fas fa-truck"></i> Doprava zdarma od 1 500 Kč</p>
+                        <p><i class="fas fa-undo"></i> Možnost vrácení do 30 dnů</p>
+                        <p><i class="fas fa-shield-alt"></i> 1 rok záruka</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="description">Popis</button>
+                    <button class="tab-btn" data-tab="specs">Parametry</button>
+                    <button class="tab-btn" data-tab="reviews">Recenze (12)</button>
+                </div>
+                
+                <div id="description" class="tab-content active">
+                    <h3>Pánev Air - dokonalý cestovatel s vámi</h3>
+                    <p>Pánev Air je naší nejlehčí a nejtenčí variantou, speciálně navržená pro ty, kteří milují cestování a kempování. Přestože je ultraľahká, vůbec nemá na funkčnosti. Její tenkostěnná konstrukce s kvalitním nepřilnavým povrchem vám umožní připravit chutné jídlo kdekoliv.</p>
+                    
+                    <h4>Hlavní výhody:</h4>
+                    <ul>
+                        <li><strong>Nejlehčí v řadě</strong> - váží jen 650g, ideální na cesty</li>
+                        <li><strong>Kompaktní design</strong> - lehko se vejde do batohu</li>
+                        <li><strong>Kvalitní nepřilnavý povrch</strong> - AirCoat™ speciálně pro leváky a omáčky</li>
+                        <li><strong>Vhodná pro všechny typy plotýnek</strong> včetně kempů</li>
+                        <li><strong>Snadné čištění</strong> - vydrží v batůžku bez problémů</li>
+                        <li><strong>Dostupná cena</strong> - kvalita za rozumné peníze</li>
+                    </ul>
+                    
+                    <h4>Obsah balení:</h4>
+                    <ul>
+                        <li>1x Pánev Air 24 cm</li>
+                        <li>1x Návod k použití a péči</li>
+                        <li>1x Pěnový návlek na rukojeť</li>
+                    </ul>
+                </div>
+                
+                <div id="specs" class="tab-content">
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-name">Průměr</div>
+                            <div class="spec-value">24 cm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Výška stěny</div>
+                            <div class="spec-value">5 cm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Materiál</div>
+                            <div class="spec-value">Zesílený hliník s nepřilnavým povlakem</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Typ povrchu</div>
+                            <div class="spec-value">Nepřilnavý AirCoat™</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Vhodné pro</div>
+                            <div class="spec-value">Všechny typy plotýnek včetné kempů</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Teplotní odolnost</div>
+                            <div class="spec-value">Až 200°C</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Hmotnost</div>
+                            <div class="spec-value">0.65 kg</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-name">Záruka</div>
+                            <div class="spec-value">1 rok</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="reviews" class="tab-content">
+                    <div class="review-summary">
+                        <div class="overall-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>4.4/5 z 12 hodnocení</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline">Napsat recenzi</button>
+                    </div>
+                    
+                    <div class="reviews-list">
+                        <!-- Example review -->
+                        <div class="review">
+                            <div class="review-header">
+                                <div class="review-author">Petr Svoboda</div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="review-date">5. 12. 2023</div>
+                            </div>
+                            <div class="review-title">Skvělá pánev na cesty</div>
+                            <div class="review-text">Vzal jsem ji na kempink a byl jsem nadšený. Je lehká, kvalitně se vyrábí a vaření v ní je příjemné. Určitě si ji vezmu i na další dovolené!</div>
+                        </div>
+                        
+                        <!-- More reviews would be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (same as index.html) -->
+    <footer id="kontakt" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <p>pans s.r.o.<br>
+                    Opavská 8b<br>
+                    639 00 Brno</p>
+                    <p>IČ: 12345678<br>
+                    DIČ: CZ12345678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Otevírací doba</h3>
+                    <p>Po – Čt 8.00–15.00<br>
+                    Pá 8.00–14.00</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Rychlý kontakt</h3>
+                    <p><a href="tel:+420123456789">+420 123 456 789</a></p>
+                    <p><a href="mailto:info@panfex.cz">info@panfex.cz</a></p>
+                    <a href="#" class="btn btn-outline">Napište nám</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Panfex. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../script.js"></script>
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons and contents
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Thumbnail click functionality
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            const mainImage = document.querySelector('.main-image img');
+            
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    // Remove active class from all thumbnails
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked thumbnail
+                    this.classList.add('active');
+                    // Update main image
+                    const newSrc = this.querySelector('img').src.replace('200', '800');
+                    mainImage.src = newSrc;
+                });
+            });
+            
+            // Add to cart functionality
+            const addToCartBtn = document.querySelector('.btn-add-to-cart');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', function() {
+                    // Add to cart logic would go here
+                    const productId = this.getAttribute('data-product-id');
+                    const productName = this.getAttribute('data-product-name');
+                    const productPrice = this.getAttribute('data-price');
+                    const productImage = this.getAttribute('data-image');
+                    
+                    window.addToCart({
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        qty: 1,
+                        image: productImage
+                    });
+                    
+                    this.textContent = 'Přidáno do košíku';
+                    this.disabled = true;
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-shopping-cart"></i> Přidat do košíku';
+                        this.disabled = false;
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
