@@ -97,6 +97,14 @@ window.addEventListener('scroll', animateOnScroll);
 
 /* --- Simple Cart Implementation --- */
 const CART_KEY = 'panfex_cart_v1';
+const ORDERS_KEY = 'panfex_orders_v1';
+
+// Bank details (upravíš jen tady)
+const BANK_RECIPIENT = 'panfex s.r.o.';
+const BANK_ACCOUNT = '344757496/0300';
+// IBAN je potřeba jen pro generování QR (nezobrazujeme ho)
+const BANK_IBAN = 'CZ3703000000003447574960';
+
 let cart = [];
 
 function loadCart() {
@@ -152,6 +160,127 @@ function formatPrice(n) {
     return n + ' Kč';
 }
 
+function cartSubtotal() {
+    return cart.reduce((s, it) => s + (Number(it.price || 0) * (it.qty || 0)), 0);
+}
+
+function cartQty() {
+    return cart.reduce((s, it) => s + (it.qty || 0), 0);
+}
+
+function clearCart() {
+    cart = [];
+    saveCart();
+    updateCartUI();
+}
+
+function loadOrders() {
+    try {
+        const raw = localStorage.getItem(ORDERS_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveOrders(orders) {
+    try {
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders || []));
+    } catch (e) {
+        // ignore
+    }
+}
+
+function generateOrderId() {
+    // čitelné ID (bez backendu)
+    return 'ORD-' + Date.now().toString(36).toUpperCase();
+}
+
+function createOrder(orderInput) {
+    const orders = loadOrders();
+    const id = generateOrderId();
+    const createdAt = new Date().toISOString();
+
+    const items = (cart || []).map(it => ({
+        id: String(it.id),
+        name: String(it.name || 'Produkt'),
+        price: Number(it.price || 0),
+        qty: Number(it.qty || 0),
+        image: it.image || null,
+    })).filter(it => it.qty > 0);
+
+    const subtotal = cartSubtotal();
+    const shippingPrice = Number(orderInput?.shippingPrice || 0);
+    const total = subtotal + shippingPrice;
+
+    const order = {
+        id,
+        createdAt,
+        status: 'awaiting_payment', // awaiting_payment | payment_sent | paid_confirmed
+        items,
+        subtotal,
+        shippingMethod: orderInput?.shippingMethod || 'courier',
+        shippingPrice,
+        total,
+        customer: {
+            firstName: orderInput?.firstName || '',
+            lastName: orderInput?.lastName || '',
+            email: orderInput?.email || '',
+            phone: orderInput?.phone || '',
+            street: orderInput?.street || '',
+            city: orderInput?.city || '',
+            zip: orderInput?.zip || '',
+            note: orderInput?.note || '',
+        },
+        payment: {
+            method: 'bank_transfer',
+        },
+    };
+
+    orders.unshift(order);
+    saveOrders(orders);
+    return order;
+}
+
+function updateOrderStatus(orderId, status) {
+    const orders = loadOrders();
+    const idx = orders.findIndex(o => o && o.id === orderId);
+    if (idx === -1) return null;
+    orders[idx].status = status;
+    saveOrders(orders);
+    return orders[idx];
+}
+
+function updateOrderPayment(orderId, paymentPatch) {
+    const orders = loadOrders();
+    const idx = orders.findIndex(o => o && o.id === orderId);
+    if (idx === -1) return null;
+    orders[idx].payment = { ...(orders[idx].payment || {}), ...(paymentPatch || {}) };
+    saveOrders(orders);
+    return orders[idx];
+}
+
+function getOrderById(orderId) {
+    return loadOrders().find(o => o && o.id === orderId) || null;
+}
+
+// Expose helpers for checkout pages
+window.loadCart = loadCart;
+window.saveCart = saveCart;
+window.updateCartUI = updateCartUI;
+window.cartSubtotal = cartSubtotal;
+window.cartQty = cartQty;
+window.clearCart = clearCart;
+window.createOrder = createOrder;
+window.getOrderById = getOrderById;
+window.updateOrderStatus = updateOrderStatus;
+window.loadOrders = loadOrders;
+window.updateOrderPayment = updateOrderPayment;
+window.BANK_RECIPIENT = BANK_RECIPIENT;
+window.BANK_ACCOUNT = BANK_ACCOUNT;
+window.BANK_IBAN = BANK_IBAN;
+
 function updateCartUI() {
     const countEl = document.getElementById('cart-count');
     const itemsEl = document.getElementById('cart-items');
@@ -160,8 +289,8 @@ function updateCartUI() {
     const pageTotalEl = document.getElementById('cart-page-total');
     const pageCheckoutEl = document.getElementById('cart-page-checkout');
 
-    const totalQty = cart.reduce((s, it) => s + (it.qty || 0), 0);
-    const totalPrice = cart.reduce((s, it) => s + (Number(it.price || 0) * (it.qty || 0)), 0);
+    const totalQty = cartQty();
+    const totalPrice = cartSubtotal();
 
     if (countEl) countEl.textContent = totalQty;
     if (totalEl) totalEl.textContent = formatPrice(totalPrice);
@@ -224,7 +353,21 @@ function updateCartUI() {
     }
 
     if (pageTotalEl) pageTotalEl.textContent = 'Celkem: ' + formatPrice(totalPrice);
-    if (pageCheckoutEl) pageCheckoutEl.href = cart.length ? '#' : '#';
+
+    // Zablokovat přechod k objednávce při 0 Kč (týká se jen "Přejít k objednávce")
+    const isDisabled = totalPrice === 0;
+    [pageCheckoutEl].forEach(el => {
+        if (!el) return;
+        if (isDisabled) {
+            el.classList.add('checkout-disabled');
+            el.style.pointerEvents = 'none';
+            el.setAttribute('aria-disabled', 'true');
+        } else {
+            el.classList.remove('checkout-disabled');
+            el.style.pointerEvents = '';
+            el.removeAttribute('aria-disabled');
+        }
+    });
 }
 
 function escapeHtml(text) {
@@ -257,6 +400,42 @@ function addToCart(product) {
 // Expose global function so pages can call: window.addToCart({id, name, price})
 window.addToCart = addToCart;
 
+// Animace fajvky při přidání do košíku (krátká, lze přidat vícekrát)
+function showAddToCartFeedback(btn) {
+    if (!btn) return;
+    // vyčistit předchozí animaci na stejném tlačítku (když uživatel kliká rychle za sebou)
+    if (btn.__atcTimer1) clearTimeout(btn.__atcTimer1);
+    if (btn.__atcTimer2) clearTimeout(btn.__atcTimer2);
+    if (btn.__atcTimer3) clearTimeout(btn.__atcTimer3);
+
+    const originalHTML = btn.innerHTML;
+    const originalBg = btn.style.backgroundColor;
+    const originalColor = btn.style.color;
+    const originalTransition = btn.style.transition;
+    const isCompact = btn.classList.contains('btn-cart');
+
+    // rychlý náběh
+    btn.style.transition = 'transform 0.2s ease, background-color 0.2s ease, color 0.2s ease';
+    btn.innerHTML = isCompact ? '<i class="fas fa-check"></i>' : '<i class="fas fa-check"></i> Přidáno';
+    btn.style.backgroundColor = '#2e7d32';
+    btn.style.color = 'white';
+    btn.classList.add('add-to-cart-success');
+
+    // krátké setrvání + pomalejší fade zpět
+    btn.__atcTimer1 = setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.transition = 'background-color 0.75s ease, color 0.75s ease, transform 0.2s ease';
+        btn.style.backgroundColor = originalBg || '';
+        btn.style.color = originalColor || '';
+        btn.classList.remove('add-to-cart-success');
+    }, 350);
+
+    btn.__atcTimer2 = setTimeout(() => {
+        btn.style.transition = originalTransition || '';
+    }, 1200);
+}
+window.showAddToCartFeedback = showAddToCartFeedback;
+
 // Wire add-to-cart buttons using data-add-to-cart attributes
 document.addEventListener('click', (e) => {
     const addBtn = e.target.closest('[data-add-to-cart]');
@@ -264,17 +443,15 @@ document.addEventListener('click', (e) => {
         const id = addBtn.getAttribute('data-id') || addBtn.getAttribute('data-product-id');
         const name = addBtn.getAttribute('data-name') || addBtn.getAttribute('data-product-name') || addBtn.dataset.name;
         const price = addBtn.getAttribute('data-price') || addBtn.dataset.price || 0;
-        addToCart({ id, name, price, qty: 1 });
+        const image = addBtn.getAttribute('data-image') || addBtn.dataset.image || null;
+        addToCart({ id, name, price, qty: 1, image });
+        showAddToCartFeedback(addBtn);
         return;
     }
 
     const removeBtn = e.target.closest('[data-remove-id]');
     if (removeBtn) {
         const id = String(removeBtn.getAttribute('data-remove-id'));
-        const confirmed = window.confirm('Opravdu chcete tuto položku odstranit z košíku?');
-        if (!confirmed) {
-            return;
-        }
         cart = cart.filter(i => String(i.id) !== id);
         saveCart();
         updateCartUI();
@@ -337,13 +514,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutLinks = document.querySelectorAll('#checkout-btn, #cart-page-checkout, #cart-btn');
     checkoutLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            if (!cart || !cart.length) {
-                return; // prázdný košík – necháme standardní chování
+            const totalPrice = cartSubtotal();
+            const isOrderBtn = link.id === 'cart-page-checkout';
+            if (isOrderBtn && (!cart || !cart.length || totalPrice === 0)) {
+                e.preventDefault();
+                return;
             }
+            try { sessionStorage.setItem('panfex_return_url', window.location.href); } catch (x) {}
+            if (!cart || !cart.length) return;
             try {
                 e.preventDefault();
                 const targetUrl = new URL(link.getAttribute('href'), window.location.href);
-                // JSON přímo do parametru; URLSearchParams ho sama zakóduje
                 targetUrl.searchParams.set('cart', JSON.stringify(cart));
                 window.location.href = targetUrl.toString();
             } catch (err) {

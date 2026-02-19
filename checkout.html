@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Doprava a údaje — Panfex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .checkout-wrap { padding-top:120px; padding-bottom:4rem; }
+        .checkout-grid { display:grid; grid-template-columns: 1.2fr 0.8fr; gap:1.5rem; align-items:start; }
+        .card { background:#fff; border-radius:10px; box-shadow:var(--box-shadow); padding:1rem; }
+        .card h3 { margin-bottom:0.75rem; }
+        .field-grid { display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem; }
+        .field { display:flex; flex-direction:column; gap:0.35rem; margin-bottom:0.75rem; }
+        .field label { font-weight:600; font-size:0.95rem; }
+        .field input, .field textarea, .field select {
+            padding:0.75rem 0.85rem;
+            border:1px solid var(--gray-medium);
+            border-radius:10px;
+            outline:none;
+            font: inherit;
+            background: #fff;
+        }
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 3px rgba(139,115,85,0.15); }
+        .radio-row { display:flex; flex-direction:column; gap:0.5rem; }
+        .radio-item { display:flex; gap:0.6rem; align-items:flex-start; padding:0.75rem; border:1px solid var(--gray-medium); border-radius:10px; cursor:pointer; }
+        .radio-item input { margin-top:0.2rem; }
+        .muted { color:var(--gray-dark); font-size:0.95rem; }
+        .summary-line { display:flex; justify-content:space-between; gap:1rem; margin:0.35rem 0; }
+        .summary-total { font-weight:800; font-size:1.1rem; margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--gray-medium); }
+        .err { color:#b00020; font-weight:600; margin-top:0.5rem; display:none; }
+        @media (max-width: 992px) { .checkout-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo"><a href="index.html"><h1>PANFEX</h1></a></div>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:1rem">
+                    <a href="cart.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Košík</a>
+                    <a href="muj-ucet.html" class="btn btn-outline">Moje objednávky</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="checkout-wrap">
+        <div class="container">
+            <h2 class="section-title">Doprava a údaje</h2>
+
+            <div class="checkout-grid">
+                <form id="checkout-form" class="card">
+                    <h3>Doprava</h3>
+                    <div class="radio-row" id="shipping-options">
+                        <label class="radio-item">
+                            <input type="radio" name="shipping" value="courier" checked>
+                            <div>
+                                <div style="font-weight:700">Kurýr (1–2 dny)</div>
+                                <div class="muted">Doručení na adresu</div>
+                            </div>
+                            <div style="margin-left:auto;font-weight:800">99 Kč</div>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="shipping" value="pickup">
+                            <div>
+                                <div style="font-weight:700">Osobní odběr</div>
+                                <div class="muted">Brno, Opavská 8b</div>
+                            </div>
+                            <div style="margin-left:auto;font-weight:800">0 Kč</div>
+                        </label>
+                    </div>
+
+                    <div style="height:1rem"></div>
+
+                    <h3>Kontaktní údaje</h3>
+                    <div class="field-grid">
+                        <div class="field">
+                            <label for="firstName">Jméno</label>
+                            <input id="firstName" name="firstName" autocomplete="given-name" required>
+                        </div>
+                        <div class="field">
+                            <label for="lastName">Příjmení</label>
+                            <input id="lastName" name="lastName" autocomplete="family-name" required>
+                        </div>
+                    </div>
+                    <div class="field-grid">
+                        <div class="field">
+                            <label for="email">E-mail</label>
+                            <input id="email" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="field">
+                            <label for="phone">Telefon</label>
+                            <input id="phone" name="phone" autocomplete="tel" required>
+                        </div>
+                    </div>
+
+                    <h3>Doručovací adresa</h3>
+                    <div class="field">
+                        <label for="street">Ulice a č.p.</label>
+                        <input id="street" name="street" autocomplete="street-address" required>
+                    </div>
+                    <div class="field-grid">
+                        <div class="field">
+                            <label for="city">Město</label>
+                            <input id="city" name="city" autocomplete="address-level2" required>
+                        </div>
+                        <div class="field">
+                            <label for="zip">PSČ</label>
+                            <input id="zip" name="zip" autocomplete="postal-code" required>
+                        </div>
+                    </div>
+
+                    <h3>Poznámka</h3>
+                    <div class="field">
+                        <label for="note" class="muted">Nepovinné</label>
+                        <textarea id="note" name="note" rows="3" placeholder="Např. kód do brány, čas doručení..."></textarea>
+                    </div>
+
+                    <div class="field" style="flex-direction:row;align-items:flex-start;gap:0.6rem">
+                        <input id="agree" type="checkbox" required style="margin-top:0.25rem">
+                        <label for="agree" class="muted">Souhlasím se zpracováním údajů pro vyřízení objednávky.</label>
+                    </div>
+
+                    <div id="checkout-error" class="err">Zkontrolujte prosím vyplněné údaje.</div>
+
+                    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+                        <button type="submit" class="btn btn-primary">Pokračovat na platbu</button>
+                        <span class="muted">Platba: pouze převod na účet</span>
+                    </div>
+                </form>
+
+                <aside class="card">
+                    <h3>Souhrn</h3>
+                    <div id="summary-items" class="muted"></div>
+                    <div style="height:0.75rem"></div>
+                    <div class="summary-line"><span>Mezisoučet</span><strong id="sum-subtotal">0 Kč</strong></div>
+                    <div class="summary-line"><span>Doprava</span><strong id="sum-shipping">0 Kč</strong></div>
+                    <div class="summary-line summary-total"><span>Celkem</span><span id="sum-total">0 Kč</span></div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        const SHIPPING = {
+            courier: { label: 'Kurýr', price: 99 },
+            pickup: { label: 'Osobní odběr', price: 0 },
+        };
+
+        function formatPrice(n) { return n + ' Kč'; }
+
+        function currentShipping() {
+            const val = (document.querySelector('input[name=\"shipping\"]:checked') || {}).value || 'courier';
+            return SHIPPING[val] ? { method: val, price: SHIPPING[val].price } : { method: 'courier', price: 99 };
+        }
+
+        function renderSummary() {
+            if (typeof loadCart === 'function') loadCart();
+            const items = (typeof cart !== 'undefined' && Array.isArray(cart)) ? cart : [];
+            const subtotal = typeof cartSubtotal === 'function' ? cartSubtotal() : 0;
+            const ship = currentShipping();
+            const total = subtotal + ship.price;
+
+            const itemsEl = document.getElementById('summary-items');
+            itemsEl.innerHTML = items.length
+                ? items.map(it => `<div class=\"summary-line\"><span>${it.name} × ${it.qty}</span><span>${formatPrice(Number(it.price||0)*Number(it.qty||0))}</span></div>`).join('')
+                : '<div class=\"muted\">Košík je prázdný.</div>';
+
+            document.getElementById('sum-subtotal').textContent = formatPrice(subtotal);
+            document.getElementById('sum-shipping').textContent = formatPrice(ship.price);
+            document.getElementById('sum-total').textContent = formatPrice(total);
+
+            const btn = document.querySelector('#checkout-form button[type=\"submit\"]');
+            if (btn) btn.disabled = subtotal === 0;
+        }
+
+        document.addEventListener('change', (e) => {
+            if (e.target && e.target.name === 'shipping') renderSummary();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof loadCart === 'function') loadCart();
+            renderSummary();
+
+            const form = document.getElementById('checkout-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const err = document.getElementById('checkout-error');
+                err.style.display = 'none';
+
+                const subtotal = typeof cartSubtotal === 'function' ? cartSubtotal() : 0;
+                if (!subtotal) { err.style.display = 'block'; return; }
+
+                const data = {
+                    shippingMethod: currentShipping().method,
+                    shippingPrice: currentShipping().price,
+                    firstName: form.firstName.value.trim(),
+                    lastName: form.lastName.value.trim(),
+                    email: form.email.value.trim(),
+                    phone: form.phone.value.trim(),
+                    street: form.street.value.trim(),
+                    city: form.city.value.trim(),
+                    zip: form.zip.value.trim(),
+                    note: form.note.value.trim(),
+                };
+
+                if (!data.firstName || !data.lastName || !data.email || !data.phone || !data.street || !data.city || !data.zip || !document.getElementById('agree').checked) {
+                    err.style.display = 'block';
+                    return;
+                }
+
+                const order = typeof createOrder === 'function' ? createOrder(data) : null;
+                if (!order) { err.style.display = 'block'; return; }
+
+                // košík po vytvoření objednávky vyčistíme (jako v reálném e-shopu)
+                if (typeof clearCart === 'function') clearCart();
+
+                window.location.href = 'payment.html?order=' + encodeURIComponent(order.id);
+            });
+        });
+    </script>
+</body>
+</html>
+

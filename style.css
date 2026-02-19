@@ -79,6 +79,25 @@ img {
     transform: translateY(-2px);
 }
 
+/* Zablokovaný tlačítko přejít k objednávce při 0 Kč */
+.checkout-disabled,
+a.checkout-disabled {
+    background-color: #b0a090 !important;
+    color: #e8e4e0 !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
+/* Animace fajvky při přidání do košíku */
+.add-to-cart-success {
+    animation: addToCartPop 0.4s ease;
+}
+@keyframes addToCartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
 .btn-outline {
     border: 2px solid var(--secondary-color);
     color: var(--secondary-color);

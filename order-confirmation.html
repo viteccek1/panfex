@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Potvrzení objednávky — Panfex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .wrap { padding-top:120px; padding-bottom:4rem; }
+        .card { background:#fff; border-radius:10px; box-shadow:var(--box-shadow); padding:1rem; max-width:900px; margin:0 auto; }
+        .muted { color:var(--gray-dark); }
+        .badge { display:inline-flex; align-items:center; gap:0.4rem; padding:0.35rem 0.6rem; border-radius:999px; font-weight:700; font-size:0.9rem; }
+        .badge.wait { background: rgba(255, 193, 7, 0.15); color:#a46a00; }
+        .badge.sent { background: rgba(46, 125, 50, 0.12); color:#2e7d32; }
+        .items { margin-top:0.75rem; border-top:1px solid var(--gray-medium); padding-top:0.75rem; }
+        .line { display:flex; justify-content:space-between; gap:1rem; margin:0.25rem 0; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo"><a href="index.html"><h1>PANFEX</h1></a></div>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:1rem">
+                    <a href="muj-ucet.html" class="btn btn-outline">Moje objednávky</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="container">
+            <h2 class="section-title">Hotovo</h2>
+            <div class="card" id="content">
+                Načítám…
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function statusBadge(status) {
+            if (status === 'payment_sent') return '<span class=\"badge sent\"><i class=\"fas fa-check\"></i> Platba odeslána</span>';
+            if (status === 'paid_confirmed') return '<span class=\"badge sent\"><i class=\"fas fa-check-circle\"></i> Zaplaceno</span>';
+            return '<span class=\"badge wait\"><i class=\"fas fa-hourglass-half\"></i> Čeká na platbu</span>';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('order');
+            const order = orderId && typeof getOrderById === 'function' ? getOrderById(orderId) : null;
+            const el = document.getElementById('content');
+
+            if (!order) {
+                el.innerHTML = '<h3>Objednávka nenalezena</h3><p class=\"muted\">Zkus to prosím znovu z košíku.</p><a class=\"btn btn-primary\" href=\"cart.html\">Do košíku</a>';
+                return;
+            }
+
+            el.innerHTML = `
+                <h3>Objednávka ${order.id}</h3>
+                <p class=\"muted\">Stav: ${statusBadge(order.status)}</p>
+                <p class=\"muted\">Objednávku zpracujeme po přijetí platby. (V projektu bez banky se stav mění ručně.)</p>
+                <div class=\"items\">
+                    ${order.items.map(it => `<div class=\"line\"><span>${it.name} × ${it.qty}</span><span>${it.price * it.qty} Kč</span></div>`).join('')}
+                    <div class=\"line\" style=\"margin-top:0.5rem\"><span class=\"muted\">Doprava</span><span>${order.shippingPrice} Kč</span></div>
+                    <div class=\"line\" style=\"font-weight:800\"><span>Celkem</span><span>${order.total} Kč</span></div>
+                </div>
+                <div style=\"margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;\">
+                    <a class=\"btn btn-outline\" href=\"index.html#produkty\">Pokračovat v nákupu</a>
+                    <a class=\"btn btn-primary\" href=\"muj-ucet.html\">Moje objednávky</a>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
+

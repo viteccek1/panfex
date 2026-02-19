@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ochrana osobních údajů | Panfex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .page-header { background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)), url('https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center/cover; color:#fff; padding:100px 0; text-align:center; margin-bottom:4rem; }
+        .page-content { max-width:900px; margin:0 auto; padding:0 1.5rem 4rem; }
+        .page-content h2 { color:var(--secondary-color); margin:2.5rem 0 1.5rem; font-size:1.8rem; }
+        .page-content p, .page-content ul { margin-bottom:1.5rem; line-height:1.7; }
+        .back-link { display:inline-flex; align-items:center; color:var(--secondary-color); margin-bottom:2rem; font-weight:500; }
+        .back-link i { margin-right:.5rem; transition:transform .3s ease; }
+        .back-link:hover { text-decoration:underline; }
+        .back-link:hover i { transform:translateX(-3px); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo"><a href="../index.html"><h1>PANFEX</h1></a></div>
+                <div class="nav-links">
+                    <a href="../index.html#produkty" class="nav-link">Produkty</a>
+                    <a href="../index.html#o-znacce" class="nav-link">O značce</a>
+                    <a href="../index.html#zakaznici" class="nav-link">Pro zákazníky</a>
+                    <a href="../index.html#o-spolecnosti" class="nav-link">O společnosti</a>
+                    <a href="../index.html#kontakt" class="btn btn-outline">Kontakt</a>
+                    <div class="cart" id="cart">
+                        <a href="../cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </a>
+                        <div class="cart-dropdown" id="cart-dropdown">
+                            <div class="cart-items" id="cart-items"></div>
+                            <div class="cart-footer">
+                                <div class="cart-total">Celkem: <span id="cart-total">0 Kč</span></div>
+                                <a href="../cart.html" class="btn btn-primary btn-small" id="checkout-btn">Přejít do košíku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>Ochrana osobních údajů</h1>
+            <p>Soukromí a zpracování dat</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-content">
+            <a href="../index.html#zakaznici" class="back-link">
+                <i class="fas fa-arrow-left"></i> Zpět na přehled
+            </a>
+            <h2>Jaká data zpracováváme</h2>
+            <p>Pro účely objednávky typicky zpracováváme kontaktní a doručovací údaje. V rámci školního projektu je tato stránka ukázková.</p>
+            <h2>Proč data zpracováváme</h2>
+            <ul>
+                <li>vyřízení objednávky a doručení</li>
+                <li>komunikace se zákazníkem</li>
+                <li>plnění zákonných povinností</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer id="kontakt" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <p>pans s.r.o.<br>Opavská 8b<br>639 00 Brno</p>
+                    <p>IČ: 12345678<br>DIČ: CZ12345678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Otevírací doba</h3>
+                    <p>Po – Čt 8.00–15.00<br>Pá 8.00–14.00</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Rychlý kontakt</h3>
+                    <p><a href="tel:+420123456789" style="color:white;text-decoration:none;">+420 123 456 789</a></p>
+                    <p><a href="mailto:info@panfex.cz" style="color:white;text-decoration:none;">info@panfex.cz</a></p>
+                    <a href="../index.html#kontakt" class="btn btn-outline" style="margin-top: 1rem;">Napište nám</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2025 Panfex. Všechna práva vyhrazena.</p></div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>
