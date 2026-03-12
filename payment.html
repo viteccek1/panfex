@@ -14,12 +14,10 @@
         .kv div { padding:0.35rem 0; }
         .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
         .muted { color:var(--gray-dark); }
-        .qr { width:220px; height:220px; display:flex; align-items:center; justify-content:center; background:var(--gray-light); border-radius:12px; border:1px solid var(--gray-medium); overflow:hidden; }
+        .qr { width:220px; height:220px; display:flex; align-items:center; justify-content:center; border-radius:12px; overflow:hidden; }
         .qr > img, .qr > canvas { transform: scale(1.05); }
         .actions { margin-top:1rem; display:flex; gap:0.75rem; flex-wrap:wrap; }
         .pay-big { font-size:2rem; font-weight:900; margin:0.5rem 0 0.25rem; }
-        .amount-input { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; margin-top:0.5rem; }
-        .amount-input input { padding:0.7rem 0.85rem; border:1px solid var(--gray-medium); border-radius:10px; font:inherit; width:180px; }
         @media (max-width: 992px) { .grid { grid-template-columns:1fr; } .qr { width:200px; height:200px; } }
     </style>
 </head>
@@ -29,7 +27,6 @@
             <nav class="navbar">
                 <div class="logo"><a href="index.html"><h1>PANFEX</h1></a></div>
                 <div style="margin-left:auto;display:flex;align-items:center;gap:1rem">
-                    <a href="muj-ucet.html" class="btn btn-outline">Moje objednávky</a>
                 </div>
             </nav>
         </div>
@@ -45,12 +42,7 @@
                     <p class="muted">Po odeslání platby se objednávka označí jako „platba odeslána“ a čeká na přijetí platby.</p>
 
                     <div class="pay-big">Pošli přesně: <span id="payBig">0 Kč</span></div>
-                    <div class="muted">QR je bez částky (0 Kč) — částku zadej ručně v bance.</div>
-                    <div class="amount-input">
-                        <label for="amountInput" class="muted" style="font-weight:700">Částka</label>
-                        <input id="amountInput" type="number" min="0" step="1">
-                        <span class="muted">Kč</span>
-                    </div>
+                    <div class="muted">Částka je pevně daná a nemůže být změněna.</div>
 
                     <div class="kv" style="margin-top:0.75rem">
                         <div class="muted">Příjemce</div><div><strong id="recipient">Panfex s.r.o.</strong></div>
@@ -70,7 +62,9 @@
                     <h3>QR kód</h3>
                     <div class="muted">Naskenuj v bankovní aplikaci.</div>
                     <div style="height:0.75rem"></div>
-                    <div class="qr" id="qrcode"></div>
+                    <div class="qr">
+                        <img src="obrazky/qr.jpg" alt="QR kód pro platbu" style="width:100%; height:100%; object-fit:contain;">
+                    </div>
                     <div style="height:0.75rem"></div>
                     <div class="muted" style="font-size:0.9rem">
                         Pokud QR nejde načíst, použij ručně údaje vlevo.
@@ -81,16 +75,7 @@
     </main>
 
     <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        function spdString({ iban, amount, vs, message }) {
-            // Czech QR Payment (SPD) – pro demo bez částky (0 Kč)
-            const am = (Math.round(amount * 100) / 100).toFixed(2);
-            const msg = (message || '').replace(/\\*/g, '').slice(0, 60);
-            const VS = String(vs || '').replace(/\\D/g, '').slice(0, 10);
-            return `SPD*1.0*ACC:${iban}*AM:${am}*CC:CZK*X-VS:${VS}*MSG:${msg}`;
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const orderId = params.get('order');
@@ -112,28 +97,16 @@
             document.getElementById('vs').textContent = vs;
             document.getElementById('msg').textContent = 'Objednávka ' + order.id;
 
-            // částka pro zákazníka (zadá ručně)
-            const amountInput = document.getElementById('amountInput');
-            const payBig = document.getElementById('payBig');
-            amountInput.value = String(amount || 0);
+            // Částka je pevně daná a nemůže být změněna
             payBig.textContent = (amount || 0) + ' Kč';
-            amountInput.addEventListener('input', () => {
-                const v = Number(amountInput.value || 0);
-                payBig.textContent = (v || 0) + ' Kč';
-            });
 
-            // QR bez částky (0 Kč) – zákazník zadá částku ručně
-            const qrcodeEl = document.getElementById('qrcode');
-            qrcodeEl.innerHTML = '';
-            const spd = spdString({ iban, amount: 0, vs, message: 'Objednávka ' + order.id });
-            new QRCode(qrcodeEl, { text: spd, width: 260, height: 260 });
+            // QR kód je nahrazen statickým obrázkem
 
             document.getElementById('copy').addEventListener('click', async () => {
-                const enteredAmount = Number(amountInput.value || 0);
                 const text = [
                     'Příjemce: ' + recipient,
                     'Číslo účtu: ' + acc,
-                    'Částka: ' + enteredAmount + ' Kč',
+                    'Částka: ' + (amount || 0) + ' Kč',
                     'VS: ' + vs,
                     'Zpráva: Objednávka ' + order.id
                 ].join('\\n');
@@ -149,12 +122,11 @@
             const paidBtn = document.getElementById('paidBtn');
             paidBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const enteredAmount = Number(amountInput.value || 0);
                 if (typeof updateOrderPayment === 'function') {
-                    updateOrderPayment(order.id, { amount: enteredAmount, vs });
+                    updateOrderPayment(order.id, { amount: amount, vs });
                 }
                 if (typeof updateOrderStatus === 'function') updateOrderStatus(order.id, 'payment_sent');
-                window.location.href = 'order-confirmation.html?order=' + encodeURIComponent(order.id);
+                window.location.href = 'index.html';
             });
         });
     </script>

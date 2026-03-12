@@ -363,6 +363,12 @@ a.checkout-disabled {
 .about-company {
     padding: 8rem 0;
     background-color: white;
+}
+
+/* About Brand Section */
+.about-brand {
+    padding: 6rem 0;
+    background-color: white;
     margin: 6rem 0;
 }
 

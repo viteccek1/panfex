@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrace objednávek - Panfex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .admin-container { padding: 120px 20px 40px; max-width: 1400px; margin: 0 auto; }
+        .admin-header { background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: var(--box-shadow); margin-bottom: 2rem; }
+        .admin-header h1 { margin: 0; color: var(--primary-color); }
+        .admin-header p { margin: 0.5rem 0 0; color: var(--gray-dark); }
+        .filters { background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: var(--box-shadow); margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+        .filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .filter-group label { font-weight: 600; font-size: 0.9rem; }
+        .filter-group input, .filter-group select { padding: 0.5rem; border: 1px solid var(--gray-medium); border-radius: 5px; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--gray-medium); color: var(--text-color); }
+        .orders-table { background: #fff; border-radius: 10px; box-shadow: var(--box-shadow); overflow: hidden; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--gray-light); }
+        .table th { background: var(--gray-light); font-weight: 600; }
+        .table tr:hover { background: var(--gray-light); }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
+        .status-new { background: #e3f2fd; color: #1976d2; }
+        .status-paid { background: #e8f5e8; color: #2e7d32; }
+        .status-sent { background: #fff3e0; color: #f57c00; }
+        .status-completed { background: #f3e5f5; color: #7b1fa2; }
+        .order-actions { display: flex; gap: 0.5rem; }
+        .btn-small { padding: 0.25rem 0.5rem; font-size: 0.85rem; }
+        .order-details { background: #fff; border-radius: 10px; box-shadow: var(--box-shadow); padding: 1.5rem; margin-top: 1rem; display: none; }
+        .order-details.show { display: block; }
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .detail-section h4 { margin-bottom: 0.5rem; color: var(--primary-color); }
+        .detail-section p { margin: 0.25rem 0; }
+        .items-table { width: 100%; margin-top: 1rem; }
+        .items-table th, .items-table td { padding: 0.5rem; text-align: left; border-bottom: 1px solid var(--gray-light); font-size: 0.9rem; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: #fff; padding: 1.5rem; border-radius: 10px; box-shadow: var(--box-shadow); text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .stat-label { color: var(--gray-dark); margin-top: 0.5rem; }
+        @media (max-width: 768px) {
+            .admin-container { padding: 100px 10px 20px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .table { font-size: 0.85rem; }
+            .table th, .table td { padding: 0.5rem; }
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo"><a href="index.html"><h1>PANFEX</h1></a></div>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:1rem">
+                    <a href="index.html" class="btn btn-outline">Zpět na hlavní</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-header">
+            <h1>Administrace objednávek</h1>
+            <p>Správa všech objednávek v e-shopu</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">Celkem objednávek</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="newOrders">0</div>
+                <div class="stat-label">Nové objednávky</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="paidOrders">0</div>
+                <div class="stat-label">Zaplacené</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalRevenue">0 Kč</div>
+                <div class="stat-label">Celková tržba</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="statusFilter">
+                    <option value="">Vše</option>
+                    <option value="new">Nové</option>
+                    <option value="payment_sent">Platba odeslána</option>
+                    <option value="paid">Zaplaceno</option>
+                    <option value="sent">Odesláno</option>
+                    <option value="completed">Dokončeno</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Hledat</label>
+                <input type="text" id="searchFilter" placeholder="Jméno, email, ID objednávky...">
+            </div>
+            <div class="filter-group">
+                <label>Od</label>
+                <input type="date" id="dateFrom">
+            </div>
+            <div class="filter-group">
+                <label>Do</label>
+                <input type="date" id="dateTo">
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" onclick="filterOrders()">
+                    <i class="fas fa-filter"></i> Filtrovat
+                </button>
+            </div>
+            <div class="filter-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <div class="orders-table">
+            <table class="table" id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>ID objednávky</th>
+                        <th>Datum</th>
+                        <th>Zákazník</th>
+                        <th>Email</th>
+                        <th>Částka</th>
+                        <th>Status</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Objednávky budou načteny dynamicky -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detail objednávky -->
+        <div id="orderDetails" class="order-details">
+            <h3>Detail objednávky <span id="detailOrderId"></span></h3>
+            <div class="detail-grid">
+                <div class="detail-section">
+                    <h4>Zákazník</h4>
+                    <p><strong>Jméno:</strong> <span id="detailName"></span></p>
+                    <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+                    <p><strong>Telefon:</strong> <span id="detailPhone"></span></p>
+                </div>
+                <div class="detail-section">
+                    <h4>Doručení</h4>
+                    <p><strong>Adresa:</strong> <span id="detailAddress"></span></p>
+                    <p><strong>Způsob:</strong> <span id="detailDelivery"></span></p>
+                    <p><strong>Cena:</strong> <span id="detailDeliveryPrice"></span></p>
+                </div>
+                <div class="detail-section">
+                    <h4>Platba</h4>
+                    <p><strong>Způsob:</strong> <span id="detailPayment"></span></p>
+                    <p><strong>Status:</strong> <span id="detailPaymentStatus"></span></p>
+                    <p><strong>Variabilní symbol:</strong> <span id="detailVS"></span></p>
+                </div>
+                <div class="detail-section">
+                    <h4>Celková cena</h4>
+                    <p><strong>Produkty:</strong> <span id="detailProductsPrice"></span></p>
+                    <p><strong>Doprava:</strong> <span id="detailDeliveryCost"></span></p>
+                    <p><strong>Celkem:</strong> <span id="detailTotal"></span></p>
+                </div>
+            </div>
+            
+            <h4 style="margin-top: 1.5rem;">Produkty v objednávce</h4>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Variant</th>
+                        <th>Množství</th>
+                        <th>Cena/ks</th>
+                        <th>Celkem</th>
+                    </tr>
+                </thead>
+                <tbody id="detailItems">
+                    <!-- Položky budou načteny dynamicky -->
+                </tbody>
+            </table>
+            
+            <div class="order-actions" style="margin-top: 1.5rem;">
+                <button class="btn btn-primary btn-small" onclick="updateOrderStatus('paid')">Označit jako zaplacené</button>
+                <button class="btn btn-primary btn-small" onclick="updateOrderStatus('sent')">Označit jako odeslané</button>
+                <button class="btn btn-primary btn-small" onclick="updateOrderStatus('completed')">Dokončit objednávku</button>
+                <button class="btn btn-outline btn-small" onclick="printOrder()">Tisknout</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        let currentOrderId = null;
+        let allOrders = [];
+
+        function loadOrders() {
+            // Načtení objednávek z localStorage (v reálném aplikaci by to bylo z API)
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            allOrders = orders;
+            displayOrders(orders);
+            updateStats(orders);
+        }
+
+        function displayOrders(orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+            
+            orders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${order.id}</strong></td>
+                    <td>${new Date(order.createdAt).toLocaleDateString('cs-CZ')}</td>
+                    <td>${order.customer.name} ${order.customer.surname}</td>
+                    <td>${order.customer.email}</td>
+                    <td><strong>${order.total} Kč</strong></td>
+                    <td><span class="status-badge status-${order.status}">${getStatusText(order.status)}</span></td>
+                    <td>
+                        <div class="order-actions">
+                            <button class="btn btn-primary btn-small" onclick="showOrderDetails('${order.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-outline btn-small" onclick="printOrder('${order.id}')">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'new': 'Nová',
+                'payment_sent': 'Platba odeslána',
+                'paid': 'Zaplaceno',
+                'sent': 'Odesláno',
+                'completed': 'Dokončeno'
+            };
+            return statusMap[status] || status;
+        }
+
+        function showOrderDetails(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            currentOrderId = orderId;
+            
+            // Naplnění detailů objednávky
+            document.getElementById('detailOrderId').textContent = order.id;
+            document.getElementById('detailName').textContent = `${order.customer.name} ${order.customer.surname}`;
+            document.getElementById('detailEmail').textContent = order.customer.email;
+            document.getElementById('detailPhone').textContent = order.customer.phone || '-';
+            document.getElementById('detailAddress').textContent = `${order.customer.address}, ${order.customer.city} ${order.customer.zip}`;
+            document.getElementById('detailDelivery').textContent = order.delivery.method || 'Doručení';
+            document.getElementById('detailDeliveryPrice').textContent = `${order.delivery.price || 0} Kč`;
+            document.getElementById('detailPayment').textContent = 'Převodem';
+            document.getElementById('detailPaymentStatus').textContent = getStatusText(order.status);
+            document.getElementById('detailVS').textContent = order.id.replace(/\D/g,'').slice(-10) || '-';
+            document.getElementById('detailProductsPrice').textContent = `${order.subtotal} Kč`;
+            document.getElementById('detailDeliveryCost').textContent = `${order.delivery.price || 0} Kč`;
+            document.getElementById('detailTotal').textContent = `${order.total} Kč`;
+            
+            // Položky objednávky
+            const itemsBody = document.getElementById('detailItems');
+            itemsBody.innerHTML = '';
+            order.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.variant || '-'}</td>
+                    <td>${item.quantity} ks</td>
+                    <td>${item.price} Kč</td>
+                    <td><strong>${item.price * item.quantity} Kč</strong></td>
+                `;
+                itemsBody.appendChild(row);
+            });
+            
+            document.getElementById('orderDetails').classList.add('show');
+        }
+
+        function updateOrderStatus(newStatus) {
+            if (!currentOrderId) return;
+            
+            const orderIndex = allOrders.findIndex(o => o.id === currentOrderId);
+            if (orderIndex === -1) return;
+            
+            allOrders[orderIndex].status = newStatus;
+            localStorage.setItem('orders', JSON.stringify(allOrders));
+            
+            loadOrders();
+            showOrderDetails(currentOrderId);
+        }
+
+        function filterOrders() {
+            const status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchFilter').value.toLowerCase();
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            
+            let filtered = allOrders.filter(order => {
+                if (status && order.status !== status) return false;
+                if (search) {
+                    const searchText = `${order.id} ${order.customer.name} ${order.customer.surname} ${order.customer.email}`.toLowerCase();
+                    if (!searchText.includes(search)) return false;
+                }
+                if (dateFrom && new Date(order.createdAt) < new Date(dateFrom)) return false;
+                if (dateTo && new Date(order.createdAt) > new Date(dateTo)) return false;
+                return true;
+            });
+            
+            displayOrders(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('searchFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            displayOrders(allOrders);
+        }
+
+        function updateStats(orders) {
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('newOrders').textContent = orders.filter(o => o.status === 'new').length;
+            document.getElementById('paidOrders').textContent = orders.filter(o => o.status === 'paid').length;
+            
+            const totalRevenue = orders.reduce((sum, order) => {
+                return sum + (order.status === 'paid' || order.status === 'sent' || order.status === 'completed' ? parseFloat(order.total) : 0);
+            }, 0);
+            document.getElementById('totalRevenue').textContent = `${totalRevenue} Kč`;
+        }
+
+        function printOrder(orderId) {
+            const order = orderId ? allOrders.find(o => o.id === orderId) : allOrders.find(o => o.id === currentOrderId);
+            if (!order) return;
+            
+            window.print();
+        }
+
+        // Načtení objednávek při startu
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+        });
+    </script>
+</body>
+</html>
