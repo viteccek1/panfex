@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt – Napište nám | Panfex</title>
+    <meta name="description"
+        content="Kontaktujte nás – napište nám zprávu a rádi vám odpovíme. Jsme Panfex, český výrobce prémiových pánví.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Kontaktní stránka ── */
+        .contact-hero {
+            padding: 10rem 0 5rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2319 100%);
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 120%, rgba(139, 115, 85, 0.25) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .contact-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .contact-hero p {
+            font-size: 1.15rem;
+            opacity: 0.75;
+            font-weight: 300;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .contact-hero .hero-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            display: block;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* ── Wrapper ── */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 3.5rem;
+            max-width: 1100px;
+            margin: 3rem auto 5rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ── Info panel ── */
+        .contact-info {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-self: start;
+        }
+
+        .contact-info h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #8B7355, #a08660);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.35);
+        }
+
+        .info-text strong {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--secondary-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .info-text span,
+        .info-text a {
+            font-size: 0.97rem;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .info-text a:hover {
+            color: var(--secondary-color);
+        }
+
+        .info-divider {
+            height: 1px;
+            background: var(--gray-medium);
+            margin: 0;
+        }
+
+        /* ── Form panel ── */
+        .contact-form-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            padding: 2.8rem;
+        }
+
+        .contact-form-card h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .contact-form-card .subtitle {
+            font-size: 0.95rem;
+            color: var(--gray-dark);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .form-group label {
+            font-size: 0.87rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            letter-spacing: 0.03em;
+        }
+
+        .form-group label .req {
+            color: var(--secondary-color);
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--gray-medium);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.97rem;
+            color: var(--dark-color);
+            background: #fafafa;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.15);
+            background: #fff;
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: #e05555;
+            box-shadow: 0 0 0 3px rgba(224, 85, 85, 0.12);
+        }
+
+        .form-group .error-msg {
+            font-size: 0.8rem;
+            color: #e05555;
+            display: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .char-count {
+            font-size: 0.78rem;
+            color: var(--gray-dark);
+            text-align: right;
+            margin-top: -0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-submit-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .privacy-note {
+            font-size: 0.8rem;
+            color: var(--gray-dark);
+            max-width: 260px;
+        }
+
+        .privacy-note a {
+            color: var(--secondary-color);
+        }
+
+        .btn-send {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.9rem 2.2rem;
+            background: linear-gradient(135deg, #8B7355, #a08660);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            box-shadow: 0 6px 20px rgba(139, 115, 85, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-send::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0);
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(139, 115, 85, 0.5);
+            filter: brightness(1.05);
+        }
+
+        .btn-send:active {
+            transform: translateY(0);
+        }
+
+        .btn-send i {
+            font-size: 0.95rem;
+        }
+
+        /* ── Úspěch ── */
+        .success-banner {
+            display: none;
+            background: #f0faf4;
+            border: 1.5px solid #6dc48c;
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #2d7a50;
+            font-weight: 600;
+            font-size: 0.97rem;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .success-banner.show {
+            display: flex;
+            animation: fadeSlideIn 0.35s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 860px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                order: 2;
+            }
+
+            .contact-form-card {
+                order: 1;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-form-card {
+                padding: 1.8rem 1.2rem;
+            }
+
+            .form-submit-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-send {
+                justify-content: center;
+            }
+
+            .privacy-note {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1>PANFEX</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html#produkty" class="nav-link">Produkty</a>
+                    <a href="index.html#o-znacce" class="nav-link">O značce</a>
+                    <a href="index.html#zakaznici" class="nav-link">Pro zákazníky</a>
+                    <a href="index.html#o-spolecnosti" class="nav-link">O společnosti</a>
+                    <a href="kontakt.html" class="btn btn-outline">Kontakt</a>
+
+                    <div class="cart" id="cart">
+                        <a href="cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </a>
+                        <div class="cart-dropdown" id="cart-dropdown">
+                            <div class="cart-items" id="cart-items"></div>
+                            <div class="cart-footer">
+                                <div class="cart-total">Celkem: <span id="cart-total">0 Kč</span></div>
+                                <a href="cart.html" class="btn btn-primary btn-small" id="checkout-btn">Přejít do
+                                    košíku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="contact-hero">
+        <div class="container">
+            <i class="fas fa-envelope-open-text hero-icon"></i>
+            <h1>Napište nám</h1>
+            <p>Máte dotaz, nápad nebo potřebujete pomoc? Ozve se vám co nejdříve.</p>
+        </div>
+    </section>
+
+    <!-- Kontaktní obsah -->
+    <div class="contact-wrapper">
+
+        <!-- Info panel -->
+        <aside class="contact-info">
+            <h2>Kontaktní údaje</h2>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="info-text">
+                    <strong>Adresa</strong>
+                    <span>pans s.r.o.<br>Opavská 8b<br>639 00 Brno</span>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                <div class="info-text">
+                    <strong>Telefon</strong>
+                    <a href="tel:+420123456789">+420 123 456 789</a>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div class="info-text">
+                    <strong>E-mail</strong>
+                    <a href="mailto:info@panfex.cz">info@panfex.cz</a>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fas fa-clock"></i></div>
+                <div class="info-text">
+                    <strong>Otevírací doba</strong>
+                    <span>Po – Čt &nbsp;8:00 – 15:00<br>Pá &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8:00 – 14:00</span>
+                </div>
+            </div>
+
+            <div class="info-divider"></div>
+
+            <div class="social-links" style="margin-top:0;">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </aside>
+
+        <!-- Formulář -->
+        <div class="contact-form-card">
+            <h2>Pošlete nám zprávu</h2>
+            <p class="subtitle">Vyplňte formulář níže a ozveme se vám do 1 pracovního dne.</p>
+
+            <!-- Úspěch banner -->
+            <div class="success-banner" id="success-banner">
+                <i class="fas fa-check-circle" style="font-size:1.3rem;"></i>
+                Vaše zpráva byla odeslána! Brzy se vám ozveme.
+            </div>
+
+            <form id="contact-form" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact-name">Jméno a příjmení <span class="req">*</span></label>
+                        <input type="text" id="contact-name" name="name" placeholder="Jan Novák" autocomplete="name"
+                            required>
+                        <span class="error-msg" id="error-name">Prosím vyplňte jméno.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact-email">E-mail <span class="req">*</span></label>
+                        <input type="email" id="contact-email" name="email" placeholder="jan.novak@email.cz"
+                            autocomplete="email" required>
+                        <span class="error-msg" id="error-email">Prosím zadejte platný e-mail.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-subject">Předmět</label>
+                    <select id="contact-subject" name="subject">
+                        <option value="">— Vyberte téma —</option>
+                        <option value="dotaz">Dotaz na produkt</option>
+                        <option value="reklamace">Reklamace</option>
+                        <option value="objednavka">Dotaz k objednávce</option>
+                        <option value="spoluprace">Spolupráce</option>
+                        <option value="jine">Jiné</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-message">Zpráva <span class="req">*</span></label>
+                    <textarea id="contact-message" name="message" placeholder="Napište nám cokoli…" maxlength="2000"
+                        required></textarea>
+                    <span class="error-msg" id="error-message">Prosím napište zprávu (min. 10 znaků).</span>
+                </div>
+                <div class="char-count"><span id="char-current">0</span> / 2000 znaků</div>
+
+                <div class="form-submit-row">
+                    <p class="privacy-note">
+                        Odesláním souhlasíte se
+                        <a href="zakaznici/ochrana-osobnich-udaju.html">zpracováním osobních údajů</a>.
+                    </p>
+                    <button type="submit" class="btn-send" id="send-btn">
+                        Odeslat zprávu
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="kontakt-footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kontakt</h3>
+                    <p>pans s.r.o.<br>Opavská 8b<br>639 00 Brno</p>
+                    <p>IČ: 12345678<br>DIČ: CZ12345678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Otevírací doba</h3>
+                    <p>Po – Čt 8.00–15.00<br>Pá 8.00–14.00</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Rychlý kontakt</h3>
+                    <p><a href="tel:+420123456789">+420 123 456 789</a></p>
+                    <p><a href="mailto:info@panfex.cz">info@panfex.cz</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Panfex. Všechna práva vyhrazena.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // ── Počítadlo znaků ──
+        const msgArea = document.getElementById('contact-message');
+        const charCount = document.getElementById('char-current');
+        msgArea.addEventListener('input', () => {
+            charCount.textContent = msgArea.value.length;
+        });
+
+        // ── Validace a odeslání ──
+        const form = document.getElementById('contact-form');
+        const successBanner = document.getElementById('success-banner');
+
+        function showError(fieldId, errId, show) {
+            const field = document.getElementById(fieldId);
+            const err = document.getElementById(errId);
+            if (show) {
+                field.classList.add('error');
+                err.style.display = 'block';
+            } else {
+                field.classList.remove('error');
+                err.style.display = 'none';
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let valid = true;
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            showError('contact-name', 'error-name', !name);
+            showError('contact-email', 'error-email', !emailRe.test(email));
+            showError('contact-message', 'error-message', message.length < 10);
+
+            if (!name || !emailRe.test(email) || message.length < 10) return;
+
+            // Simulace odeslání (bez backendu)
+            const btn = document.getElementById('send-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Odesílám…';
+
+            setTimeout(() => {
+                form.reset();
+                charCount.textContent = '0';
+                btn.disabled = false;
+                btn.innerHTML = 'Odeslat zprávu <i class="fas fa-paper-plane"></i>';
+                successBanner.classList.add('show');
+                successBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                setTimeout(() => successBanner.classList.remove('show'), 6000);
+            }, 1200);
+        });
+
+        // Čistí chybu při psaní
+        ['contact-name', 'contact-email', 'contact-message'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                document.getElementById(id).classList.remove('error');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Přihlášení / Registrace — Panfex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 120px auto 4rem;
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-medium);
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--gray-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .auth-tab.active {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .error-msg {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+        .success-msg {
+            color: #2e7d32;
+            background-color: #e8f5e9;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1>PANFEX</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html#produkty" class="nav-link">Produkty</a>
+                    <a href="index.html#o-znacce" class="nav-link">O značce</a>
+                    <a href="index.html#zakaznici" class="nav-link">Pro zákazníky</a>
+                    <a href="index.html#o-spolecnosti" class="nav-link">O společnosti</a>
+                    <a href="index.html#kontakt" class="btn btn-outline">Kontakt</a>
+
+                    <a href="login.html" class="cart-btn" aria-label="Přihlášení" style="margin-right: -0.5rem;">
+                        <i class="fas fa-user"></i>
+                    </a>
+
+                    <div class="cart" id="cart" style="margin-left: 0;">
+                        <a href="cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count" id="cart-count">0</span>
+                        </a>
+                        <div class="cart-dropdown" id="cart-dropdown">
+                            <div class="cart-items" id="cart-items">
+                                <!-- Položky košíku budou vloženy sem -->
+                            </div>
+                            <div class="cart-footer">
+                                <div class="cart-total">Celkem: <span id="cart-total">0 Kč</span></div>
+                                <a href="cart.html" class="btn btn-primary btn-small" id="checkout-btn">Přejít do košíku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-target="login">Přihlášení</div>
+                <div class="auth-tab" data-target="register">Registrace</div>
+            </div>
+
+            <div id="login" class="auth-form active">
+                <form id="form-login">
+                    <div class="form-group">
+                        <label class="form-label" for="login-nickname">Přezdívka</label>
+                        <input type="text" id="login-nickname" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="login-email">E-mail</label>
+                        <input type="email" id="login-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">Heslo</label>
+                        <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <div id="login-error" class="error-msg">Nespravné přihlašovací údaje. Zkuste to znovu.</div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; display: block; text-align: center;">Přihlásit se</button>
+                </form>
+            </div>
+
+            <div id="register" class="auth-form">
+                <form id="form-register">
+                    <div class="form-group">
+                        <label class="form-label" for="reg-nickname">Přezdívka (Nickname)</label>
+                        <input type="text" id="reg-nickname" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="reg-email">E-mail</label>
+                        <input type="email" id="reg-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="reg-password">Heslo</label>
+                        <input type="password" id="reg-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="reg-password-confirm">Potvrzení hesla</label>
+                        <input type="password" id="reg-password-confirm" class="form-control" required>
+                    </div>
+                    <div id="reg-error" class="error-msg">Hesla se neshodují nebo uživatel už existuje.</div>
+                    <div id="reg-success" class="success-msg">Registrace úspěšná! Nyní se můžete přihlásit.</div>
+                    <button type="submit" class="btn btn-outline" style="width: 100%; display: block; text-align: center;">Vytvořit účet</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab switching
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    forms.forEach(f => f.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(tab.getAttribute('data-target')).classList.add('active');
+                });
+            });
+
+            // Redirect if already logged in
+            if(localStorage.getItem('currentUser')) {
+                window.location.href = 'muj-ucet.html';
+            }
+
+            // Register logic
+            const formReg = document.getElementById('form-register');
+            formReg.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nn = document.getElementById('reg-nickname').value;
+                const em = document.getElementById('reg-email').value;
+                const pw = document.getElementById('reg-password').value;
+                const pw2 = document.getElementById('reg-password-confirm').value;
+                const err = document.getElementById('reg-error');
+                const suc = document.getElementById('reg-success');
+                
+                err.style.display = 'none';
+                suc.style.display = 'none';
+
+                if(pw !== pw2) {
+                    err.innerText = 'Hesla se neshodují.';
+                    err.style.display = 'block';
+                    return;
+                }
+
+                let users = JSON.parse(localStorage.getItem('users') || '[]');
+                if(users.find(u => u.email === em || u.nickname === nn)) {
+                    err.innerText = 'Uživatel s tímto e-mailem nebo přezdívkou již existuje.';
+                    err.style.display = 'block';
+                    return;
+                }
+
+                users.push({ nickname: nn, email: em, password: pw });
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                suc.style.display = 'block';
+                formReg.reset();
+                setTimeout(() => {
+                    tabs[0].click(); // Switch to login
+                }, 2000);
+            });
+
+            // Login logic
+            const formLogin = document.getElementById('form-login');
+            formLogin.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nn = document.getElementById('login-nickname').value;
+                const em = document.getElementById('login-email').value;
+                const pw = document.getElementById('login-password').value;
+                const err = document.getElementById('login-error');
+                
+                err.style.display = 'none';
+
+                let users = JSON.parse(localStorage.getItem('users') || '[]');
+                // Find matching user
+                const user = users.find(u => u.nickname === nn && u.email === em && u.password === pw);
+
+                if(user) {
+                    localStorage.setItem('currentUser', JSON.stringify({ nickname: user.nickname, email: user.email }));
+                    window.location.href = 'muj-ucet.html';
+                } else {
+                    err.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

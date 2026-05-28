@@ -27,6 +27,10 @@
                     <a href="#o-spolecnosti" class="nav-link">O společnosti</a>
                     <a href="#kontakt" class="btn btn-outline">Kontakt</a>
 
+                    <a href="login.html" class="cart-btn" aria-label="Přihlášení">
+                        <i class="fas fa-user"></i>
+                    </a>
+
                     <div class="cart" id="cart">
                         <a href="cart.html" class="cart-btn" id="cart-btn" aria-haspopup="true" aria-label="Košík">
                             <i class="fas fa-shopping-cart"></i>
@@ -61,6 +65,16 @@
         </div>
     </section>
 
+    <!-- Main Ticker Section -->
+    <div class="main-ticker">
+        <div class="ticker-wrapper">
+            <div class="ticker-item"><i class="fas fa-fire"></i> <strong>NOVÝ PRODUKT:</strong> Nerezová pánev Panfex Pro-Steel (Nyní skladem!) <span> • </span> Doprava zdarma nad 2 000 Kč <span> • </span></div>
+            <div class="ticker-item"><i class="fas fa-fire"></i> <strong>NOVÝ PRODUKT:</strong> Nerezová pánev Panfex Pro-Steel (Nyní skladem!) <span> • </span> Doprava zdarma nad 2 000 Kč <span> • </span></div>
+            <div class="ticker-item"><i class="fas fa-fire"></i> <strong>NOVÝ PRODUKT:</strong> Nerezová pánev Panfex Pro-Steel (Nyní skladem!) <span> • </span> Doprava zdarma nad 2 000 Kč <span> • </span></div>
+            <div class="ticker-item"><i class="fas fa-fire"></i> <strong>NOVÝ PRODUKT:</strong> Nerezová pánev Panfex Pro-Steel (Nyní skladem!) <span> • </span> Doprava zdarma nad 2 000 Kč <span> • </span></div>
+        </div>
+    </div>
+
     <!-- Tipy a triky -->
     <section id="tipy" class="about-brand">
         <div class="container">
@@ -79,7 +93,7 @@
                         </div>
                         <div class="feature">
                             <i class="fas fa-broom"></i>
-                            <p>Po vaření nechte vychladnout a myjte jemně — vydrží déle.</p>
+                            <p>Po vaření nechte vychladnout a myjte jemně - vydrží déle.</p>
                         </div>
                     </div>
                 </div>
@@ -245,7 +259,7 @@
                     <h3>Rychlý kontakt</h3>
                     <p><a href="tel:+420123456789">+420 123 456 789</a></p>
                     <p><a href="mailto:info@panfex.cz">info@panfex.cz</a></p>
-                    <a href="#" class="btn btn-outline">Napište nám</a>
+                    <a href="kontakt.html" class="btn btn-outline">Napište nám</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -255,5 +269,69 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+    /* ============================================================
+       MagicBento – vanilla JS efekty (spotlight, glow, tilt, ripple)
+       ============================================================ */
+    (function () {
+        const CARDS_SELECTOR = '.category-card, .product-card, .customer-link';
+        const TILT_MAX = 8; // stupně naklonění
+
+        /* --- Inicializace na všech kartách --- */
+        function initCard(card) {
+            card.addEventListener('mousemove', function (e) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                /* Border glow – pozice kurzoru v % */
+                const pctX = (x / rect.width)  * 100;
+                const pctY = (y / rect.height) * 100;
+                card.style.setProperty('--glow-x', pctX + '%');
+                card.style.setProperty('--glow-y', pctY + '%');
+                card.style.setProperty('--glow-intensity', '1');
+
+                /* Tilt */
+                const cx = rect.width  / 2;
+                const cy = rect.height / 2;
+                const rotX = ((y - cy) / cy) * -TILT_MAX;
+                const rotY = ((x - cx) / cx) *  TILT_MAX;
+                card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
+            });
+
+            card.addEventListener('mouseleave', function () {
+                card.style.setProperty('--glow-intensity', '0');
+                card.style.transform = '';
+            });
+
+            /* Ripple klik */
+            card.addEventListener('click', function (e) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const maxD = Math.max(
+                    Math.hypot(x, y),
+                    Math.hypot(x - rect.width, y),
+                    Math.hypot(x, y - rect.height),
+                    Math.hypot(x - rect.width, y - rect.height)
+                );
+                const size = maxD * 2;
+                const ripple = document.createElement('span');
+                ripple.className = 'panfex-ripple';
+                Object.assign(ripple.style, {
+                    width:  size + 'px',
+                    height: size + 'px',
+                    left:   (x - size / 2) + 'px',
+                    top:    (y - size / 2) + 'px'
+                });
+                card.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            });
+        }
+
+        /* Spustit na kartách v DOMu i na budoucích (pro SPA) */
+        document.querySelectorAll(CARDS_SELECTOR).forEach(initCard);
+    })();
+    </script>
 </body>
 </html>
